@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FlowLayout">
+        <attr name="align">
+            <enum name="left" value="0"/>
+            <enum name="center" value="1"/>
+            <enum name="right" value="2"/>
+            <enum name="both_sides" value="3"/>
+        </attr>
+        <attr name="lineSpacingExtra" format="dimension"/>
+        <attr name="itemSpacingExtra" format="dimension"/>
+        <attr name="tagTextSize" format="dimension"/>
+        <attr name="tagTextColor" format="color"/>
+        <attr name="tagBackground" format="reference|color"/>
+    </declare-styleable>
+</resources>
