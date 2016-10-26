@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
- * 流布局.
+ * 流布局，不支持点选效果，标签背景应只包含default态.
  * Created by yushaojian on 10/18/16.
  */
 

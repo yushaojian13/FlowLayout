@@ -10,7 +10,7 @@
         <attr name="lineSpacingExtra" format="dimension"/>
         <attr name="itemSpacingExtra" format="dimension"/>
         <attr name="tagTextSize" format="dimension"/>
-        <attr name="tagTextColor" format="color"/>
+        <attr name="tagTextColor" format="reference|color"/>
         <attr name="tagBackground" format="reference|color"/>
     </declare-styleable>
 </resources>

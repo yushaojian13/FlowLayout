@@ -1,6 +1,7 @@
 package com.ysj.flowlayoutapp;
 
 import java.util.List;
+import java.util.Set;
 
 import com.ysj.flowlayout.CheckedFlowLayout;
 
@@ -14,10 +15,10 @@ import android.widget.ToggleButton;
 public class HomeActivity extends AppCompatActivity implements CheckedFlowLayout.OnSelectChangedListener {
 	private TextView		  tagsTV;
 	private CheckedFlowLayout flowLayout;
-	private ToggleButton toggleButton;
+	private ToggleButton	  toggleButton;
 
-	private static final String[] tags = { "hello", "wonderful", "foo", "geek", "ViewGroup", "TextView",
-	                                              "Bundle", "View", "AppCompatActivity" };
+	private static final String[] tags = { "hello", "wonderful", "foo", "geek", "ViewGroup", "TextView", "Bundle",
+	                                       "View", "AppCompatActivity" };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +39,12 @@ public class HomeActivity extends AppCompatActivity implements CheckedFlowLayout
 	}
 
 	@Override
-	public void onTagClick(CheckedFlowLayout checkedFlowLayout, String tag, int position, boolean selected) {
-		Toast.makeText(this, tag + " " + position + " selected " + selected, Toast.LENGTH_SHORT).show();
+	public void onTagClick(CheckedFlowLayout checkedFlowLayout, int position, boolean selected) {
+		Toast.makeText(this, "position " + position + " selected " + selected, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
-	public void onTagSelectChanged(CheckedFlowLayout checkedFlowLayout, List<String> checkedTags) {
-		tagsTV.setText(checkedTags.toString());
+	public void onTagSelectChanged(CheckedFlowLayout checkedFlowLayout, Set<Integer> checkedPositions) {
+		tagsTV.setText(checkedPositions.toString());
 	}
 }

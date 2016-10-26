@@ -5,17 +5,19 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
+ * 支持标签点选效果的流布局，标签背景应包含default、pressed和selected态.
  * Created by yushaojian on 10/23/16.
  */
 
 public class CheckedFlowLayout extends FlowLayout implements View.OnClickListener {
 	private OnSelectChangedListener onSelectChangedListener;
 
-	private List<String> selectedTags = new ArrayList<>();
+	private Set<Integer> selectedPositions = new LinkedHashSet<>();
 
 	public CheckedFlowLayout(Context context) {
 		this(context, null);
@@ -54,22 +56,25 @@ public class CheckedFlowLayout extends FlowLayout implements View.OnClickListene
 	public void setSelected(boolean selected) {
 		super.setSelected(selected);
 
-		selectedTags.clear();
+		selectedPositions.clear();
 		if (selected) {
-			selectedTags.addAll(tags);
+			int childCount = getChildCount();
+			for (int i = 0; i < childCount; i++) {
+				selectedPositions.add(i);
+			}
 		}
 
 		notifySelectedTagsChanged();
 	}
 
 	private void clearSelected() {
-		selectedTags.clear();
+		selectedPositions.clear();
 		notifySelectedTagsChanged();
 	}
 
 	private void notifySelectedTagsChanged() {
 		if (onSelectChangedListener != null) {
-			onSelectChangedListener.onTagSelectChanged(this, selectedTags);
+			onSelectChangedListener.onTagSelectChanged(this, selectedPositions);
 		}
 	}
 
@@ -78,17 +83,16 @@ public class CheckedFlowLayout extends FlowLayout implements View.OnClickListene
 		v.setSelected(!v.isSelected());
 
 		if (onSelectChangedListener != null) {
-			TextView tagTV = (TextView) v;
-			String tag = tagTV.getText().toString();
+			int position = indexOfChild(v);
 
-			if (tagTV.isSelected()) {
-				selectedTags.add(tag);
+			if (v.isSelected()) {
+				selectedPositions.add(position);
 			} else {
-				selectedTags.remove(tag);
+				selectedPositions.remove(position);
 			}
 
-			onSelectChangedListener.onTagClick(this, tag,  indexOfChild(v), tagTV.isSelected());
-			onSelectChangedListener.onTagSelectChanged(this, selectedTags);
+			onSelectChangedListener.onTagClick(this, position, v.isSelected());
+			onSelectChangedListener.onTagSelectChanged(this, selectedPositions);
 		}
 	}
 
@@ -101,18 +105,17 @@ public class CheckedFlowLayout extends FlowLayout implements View.OnClickListene
 		 * 标签被点击时回调.
 		 *
 		 * @param checkedFlowLayout 标签所在的CheckedFlowLayout
-		 * @param tag 标签名
 		 * @param position 标签位置
 		 * @param selected 是否选中
 		 */
-		void onTagClick(CheckedFlowLayout checkedFlowLayout, String tag, int position, boolean selected);
+		void onTagClick(CheckedFlowLayout checkedFlowLayout, int position, boolean selected);
 
 		/**
 		 * 已选的标签改变时调用
 		 *
 		 * @param checkedFlowLayout 标签所在的CheckedFlowLayout
-		 * @param checkedTags 所有已选的tags
+		 * @param checkedPositions 所有已选的位置
 		 */
-		void onTagSelectChanged(CheckedFlowLayout checkedFlowLayout, List<String> checkedTags);
+		void onTagSelectChanged(CheckedFlowLayout checkedFlowLayout, Set<Integer> checkedPositions);
 	}
 }
