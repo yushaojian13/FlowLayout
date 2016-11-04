@@ -9,6 +9,7 @@
         </attr>
         <attr name="lineSpacingExtra" format="dimension"/>
         <attr name="itemSpacingExtra" format="dimension"/>
+        <attr name="maxLines" format="integer"/>
         <attr name="tagTextSize" format="dimension"/>
         <attr name="tagTextColor" format="reference|color"/>
         <attr name="tagBackground" format="reference|color"/>

@@ -34,6 +34,8 @@ public class FlowLayout extends ViewGroup {
 	private int	lineSpacingExtra; // 额外的行间距
 	private int	itemSpacingExtra; // 额外的item间距，两边对齐模式下间距可能会被拉大
 
+	private int maxLines; // 最大行数
+
 	private List<Rect> rects = new ArrayList<>(INIT_LINE_CHILD_COUNT); // 逐次记录每一行子view的左上右下坐标值
 	private int		   lineFirstChildIndex;							   // 逐次记录每一行最前面的子view的索引值
 
@@ -59,6 +61,7 @@ public class FlowLayout extends ViewGroup {
 		align = typedArray.getInt(R.styleable.FlowLayout_align, LEFT);
 		lineSpacingExtra = typedArray.getDimensionPixelSize(R.styleable.FlowLayout_lineSpacingExtra, 0);
 		itemSpacingExtra = typedArray.getDimensionPixelSize(R.styleable.FlowLayout_itemSpacingExtra, 0);
+		maxLines = typedArray.getInteger(R.styleable.FlowLayout_maxLines, Integer.MAX_VALUE);
 		tagTextSize = typedArray.getDimensionPixelSize(R.styleable.FlowLayout_tagTextSize, 0);
 		tagTextColor = typedArray.getColorStateList(R.styleable.FlowLayout_tagTextColor);
 		tagBackgroundId = typedArray.getResourceId(R.styleable.FlowLayout_tagBackground, 0);
@@ -133,6 +136,8 @@ public class FlowLayout extends ViewGroup {
 
 		int childCount = this.getChildCount();
 
+		int lineCount = 0; // 行数
+
 		/*
 		 * 遍历子view，将子view进行Z型排列分行，计算出FlowLayout所需要的宽度与高度，
 		 * 高度为所有行高及行间距之和，宽度为所有行宽中的最大值
@@ -175,9 +180,17 @@ public class FlowLayout extends ViewGroup {
 
 				lineWidth -= itemSpacingExtra; // 减去该行最后一个子view引入的itemSpacingExtra
 				layoutWidth = Math.max(layoutWidth, lineWidth);
-				layoutHeight += lineHeight + lineSpacingExtra;
+				layoutHeight += lineHeight;
 
-				lineWidth = childWidthWithMargin + itemSpacingExtra; // 如果一行只容得下这一个子view怎么办？
+				// 行数+1，如果当前行数达到最大行数限制，结束测量
+				lineCount += 1;
+				if (lineCount == maxLines) {
+					break;
+				}
+
+				// 开启下一行
+				layoutHeight += lineSpacingExtra;
+				lineWidth = childWidthWithMargin + itemSpacingExtra;
 				lineHeight = childHeightWithMargin;
 			} else {
 				// 不需换行，行宽累加，行高为历史值与子view高的较大值
@@ -230,6 +243,8 @@ public class FlowLayout extends ViewGroup {
 		lineFirstChildIndex = 0;
 		int lineChildCount = 0;
 
+		int lineCount = 0; // 行数
+
 		int childCount = this.getChildCount();
 		for (int i = 0; i < childCount; i++) {
 			View child = this.getChildAt(i);
@@ -264,6 +279,12 @@ public class FlowLayout extends ViewGroup {
 			if (widthUsed + childWidthWithMargin > widthAvailable) {
 				widthUsed -= itemSpacingExtra; // 减去该行最后一个子view引入的itemSpacingExtra
 				layoutLine(widthUsed, widthAvailable, lineChildCount, false);
+
+				// 行数+1，如果当前行数达到最大行数限制，结束排布
+				lineCount += 1;
+				if (lineCount == maxLines) {
+					break;
+				}
 
 				offsetX = paddingLeft;
 				offsetY += lineHeight + lineSpacingExtra;
