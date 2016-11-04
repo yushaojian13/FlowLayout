@@ -1,13 +1,13 @@
 package com.ysj.flowlayout;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -95,7 +95,15 @@ public class FlowLayout extends ViewGroup {
 	public TextView addTag(String tag) {
 		tags.add(tag);
 
-		MarginLayoutParams lp = new MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		TextView tagTV = createTagView(tag);
+
+		addView(tagTV);
+
+		return tagTV;
+	}
+
+	@NonNull
+	private TextView createTagView(String tag) {
 		TextView tagTV = new TextView(getContext());
 		tagTV.setText(tag);
 		tagTV.setGravity(Gravity.CENTER_VERTICAL);
@@ -111,7 +119,7 @@ public class FlowLayout extends ViewGroup {
 
 		tagTV.setBackgroundResource(tagBackgroundId);
 
-		addView(tagTV, lp);
+		tagTV.setLayoutParams(new MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 
 		return tagTV;
 	}
