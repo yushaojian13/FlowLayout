@@ -79,7 +79,7 @@ public class FlowLayout extends ViewGroup {
 	 * @param tags 标签数组
 	 */
 	public void setTags(String[] tags) {
-		removeAllViews();
+		clearTags();
 
 		for (String tag : tags) {
 			addTag(tag);
@@ -100,6 +100,10 @@ public class FlowLayout extends ViewGroup {
 		addView(tagTV);
 
 		return tagTV;
+	}
+
+	public void clearTags() {
+		removeAllViews();
 	}
 
 	@NonNull
